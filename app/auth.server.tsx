@@ -18,7 +18,6 @@ const userPool = new CognitoUserPool({
 // Tell the Authenticator to use the form strategy
 authenticator.use(
     new FormStrategy(async ({ form }) => {
-        console.log(form);
         let email = form.get("email");
         let password = form.get("password");
         // Create a new CognitoUser
