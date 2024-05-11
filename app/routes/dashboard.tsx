@@ -1,10 +1,21 @@
 import { json, useLoaderData, Link } from '@remix-run/react';
 import {
   Box, CloseButton, Flex, Text, Icon, IconButton, VStack, Link as ChakraLink, Drawer,
-  DrawerContent, useDisclosure, useColorModeValue
+  DrawerContent, useDisclosure, useColorModeValue,
+  Heading
 } from "@chakra-ui/react";
 import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings, FiMenu } from "react-icons/fi";
 import { IconType } from "react-icons";
+import Card from '../components/Card';
+
+export let loader = async () => {
+  // Simulate fetching card data
+  return [
+    { id: 1, title: "Card 1", imageUrl: "https://via.placeholder.com/150", description: "Description of card 1" },
+    { id: 2, title: "Card 2", imageUrl: "https://via.placeholder.com/150", description: "Description of card 2" },
+    // More cards can be added here
+  ];
+};
 
 // Define LinkItems with routes
 const LinkItems = [
@@ -70,7 +81,7 @@ function NavItem({ icon, children, link }: { icon: IconType, children: React.Rea
 }
 
 // Parent component
-export default function SidebarWithHeader({ children }: { children: React.ReactNode }) {
+function SidebarWithHeader({ children }: { children: React.ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
@@ -93,3 +104,20 @@ export default function SidebarWithHeader({ children }: { children: React.ReactN
     </Box>
   );
 }
+
+export default function Dashboard() {
+        const cards = useLoaderData() as { id: number, title: string, imageUrl: string, description: string }[];
+        return (
+            <SidebarWithHeader>
+            <Box p="4">
+                <Heading mb="4">Featured Content</Heading>
+                <Flex overflowX="scroll" gap="3">
+                    {cards.map(card => (
+                        <Card key={card.id} {...card} />
+                    ))}
+                </Flex>
+            </Box>
+            </SidebarWithHeader>
+        );
+    }
+  
