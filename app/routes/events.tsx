@@ -9,34 +9,17 @@ import { IconType } from "react-icons";
 import Card from '../components/Card';
 
 export let loader = async () => {
-
-    let response = await fetch('https://1mqt3o8gkl.execute-api.us-east-1.amazonaws.com/dev/user/homepage/streams', {
-        headers: {
-        'Content-Type': 'application/json',
-        // Include additional headers here if needed
-        },
-    });
-
-    // Check if the request was successful
-  if (!response.ok) throw new Error("Couldn't load the cards");
-
-  // Parse the response body as JSON
-  let data = await response.json();
   // Simulate fetching card data
-  return data.scheduled.map((stream: { event_id: number, event_title: string, imageUrl: string, event_description: string, event_time: string}) => {
-    return {
-      id: stream.event_id,
-      title: stream.event_title,
-      imageUrl: 'https://www.usnews.com/dims4/USNEWS/72c90e6/17177859217/resize/800x540%3E/quality/85/?url=https%3A%2F%2Fmedia.beam.usnews.com%2F9d%2Fd819230374ef6531890bb7eee1dac0%2FNYU_WSP_Header.jpg',
-      description: stream.event_description,
-      time: Date.parse(stream.event_time).toLocaleString(),
-    };
-  })
+  return [
+    { id: 1, title: "Card 1", imageUrl: "https://via.placeholder.com/150", description: "Description of card 1" },
+    { id: 2, title: "Card 2", imageUrl: "https://via.placeholder.com/150", description: "Description of card 2" },
+    // More cards can be added here
+  ];
 };
 
 // Define LinkItems with routes
 const LinkItems = [
-  { name: 'Home', icon: FiHome, to: '/dashboard' },
+  { name: 'Home', icon: FiHome, to: '/' },
   { name: 'Scheduled Events', icon: FiTrendingUp, to: '/events' },
   { name: 'Explore', icon: FiCompass, to: '/explore' },
   { name: 'Favourites', icon: FiStar, to: '/favourites' },
@@ -123,11 +106,11 @@ function SidebarWithHeader({ children }: { children: React.ReactNode }) {
 }
 
 export default function Dashboard() {
-        const cards = useLoaderData() as { id: number, title: string, imageUrl: string, description: string , time: string}[];
+        const cards = useLoaderData() as { id: number, title: string, imageUrl: string, description: string }[];
         return (
             <SidebarWithHeader>
             <Box p="4">
-                <Heading mb="4">Streaming NOW 🧨🧨🧨</Heading>
+                <Heading mb="4">Featured Content</Heading>
                 <Flex overflowX="scroll" gap="3">
                     {cards.map(card => (
                         <Card key={card.id} {...card} />
