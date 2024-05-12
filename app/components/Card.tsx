@@ -19,7 +19,7 @@ export default function Card({ title, imageUrl, description, time }: { title: st
         </Text>
         <Link to={{
             pathname: "/viewstream",
-            search: "?play_back_url=string",
+            search: "?play_back_url=https://145742c78c44.us-east-1.playback.live-video.net/api/video/v1/us-east-1.211125489044.channel.j0tIJIU7vA3E.m3u8",
         }}>
         <Button mt="3" colorScheme="teal">Learn More</Button>
         </Link>
