@@ -1,4 +1,5 @@
 import { Box, Image, Text, Button } from '@chakra-ui/react';
+import { Link } from '@remix-run/react';
 
 export default function Card({ title, imageUrl, description, time }: { title: string, imageUrl: string, description: string , time: string}) {
   return (
@@ -16,7 +17,12 @@ export default function Card({ title, imageUrl, description, time }: { title: st
         <Text mt="2" fontSize="sm" color="gray.500">
             {time}
         </Text>
+        <Link to={{
+            pathname: "/viewstream",
+            search: "?play_back_url=string",
+        }}>
         <Button mt="3" colorScheme="teal">Learn More</Button>
+        </Link>
       </Box>
     </Box>
   );

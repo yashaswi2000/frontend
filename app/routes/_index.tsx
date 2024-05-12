@@ -1,5 +1,5 @@
 import { ExternalLinkIcon } from "@chakra-ui/icons";
-import type { MetaFunction } from "@remix-run/node";
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { NavLink, Link } from "@remix-run/react";
 import NavBar from "~/components/NavBar";
 
@@ -22,6 +22,13 @@ import {
   useColorModeValue,
   createIcon,
 } from '@chakra-ui/react';
+import { authenticator } from "~/auth.server";
+
+export async function loader({request}: LoaderFunctionArgs) {
+  return await authenticator.isAuthenticated(request, {
+    successRedirect: "/dashboard",
+  });
+}
 
 export default function CallToActionWithAnnotation() {
   return (
