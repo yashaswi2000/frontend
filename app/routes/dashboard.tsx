@@ -4,7 +4,7 @@ import {
   DrawerContent, useDisclosure, useColorModeValue,
   Heading
 } from "@chakra-ui/react";
-import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings, FiMenu } from "react-icons/fi";
+import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings, FiPlusCircle, FiMenu } from "react-icons/fi";
 import { IconType } from "react-icons";
 import Card from '../components/Card';
 
@@ -38,6 +38,8 @@ export let loader = async () => {
 const LinkItems = [
   { name: 'Home', icon: FiHome, to: '/dashboard' },
   { name: 'Scheduled Events', icon: FiTrendingUp, to: '/events' },
+  { name: 'Trending', icon: FiTrendingUp, to: '/trending' },
+  { name: 'Create Event', icon: FiPlusCircle, to: '/createEvent' },
   { name: 'Explore', icon: FiCompass, to: '/explore' },
   { name: 'Favourites', icon: FiStar, to: '/favourites' },
   { name: 'Settings', icon: FiSettings, to: '/settings' },
