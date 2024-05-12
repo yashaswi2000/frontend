@@ -1,7 +1,6 @@
 import { Box, Image, Text, Button } from '@chakra-ui/react';
 
 export default function Card({ title, imageUrl, description, time }: { title: string, imageUrl: string, description: string , time: string}) {
-  console.log('Card', title, imageUrl, description, time);
   return (
     <Box
       maxW="sm"

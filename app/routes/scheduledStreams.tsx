@@ -33,7 +33,6 @@ export let loader = async ({ request }) => {
   return data.results.map((stream: { event_id: number, event_title: string, imageUrl: string, event_description: string, event_time: string}) => {
     return {
       id: stream.event_id,
-      event_id: stream.event_id,
       title: stream.event_title,
       imageUrl: 'https://www.usnews.com/dims4/USNEWS/72c90e6/17177859217/resize/800x540%3E/quality/85/?url=https%3A%2F%2Fmedia.beam.usnews.com%2F9d%2Fd819230374ef6531890bb7eee1dac0%2FNYU_WSP_Header.jpg',
       description: stream.event_description,
@@ -133,7 +132,7 @@ function SidebarWithHeader({ children }: { children: React.ReactNode }) {
 }
 
 export default function Dashboard() {
-  const cards = useLoaderData() as { id: number, title: string, imageUrl: string, description: string , time: string, event_id: string}[];
+  const cards = useLoaderData() as { id: number, title: string, imageUrl: string, description: string , time: string}[];
   return (
     <SidebarWithHeader>
     <Box p="4">
