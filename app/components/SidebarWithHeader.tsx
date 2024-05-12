@@ -17,7 +17,6 @@ const LinkItems = [
     { name: 'Home', icon: FiHome, to: '/dashboard' },
     { name: 'Scheduled Events', icon: FiTrendingUp, to: '/events' },
     { name: 'Trending', icon: FiTrendingUp, to: '/trending' },
-    { name: 'Create Channel', icon: FiGitPullRequest, to: '/createChannel' },
     { name: 'My Scheduled Streams', icon: FiPlusCircle, to: '/scheduledStreams' },
     { name: 'Explore', icon: FiCompass, to: '/explore' },
     { name: 'Favourites', icon: FiStar, to: '/favourites' },
