@@ -7,7 +7,7 @@ import { AuthenticationDetails, CognitoAccessToken, CognitoUser, CognitoUserPool
 
 // Create an instance of the authenticator, pass a generic with what
 // strategies will return and will store in the session
-export let authenticator = new Authenticator<CognitoAccessToken>(sessionStorage);
+export let authenticator = new Authenticator<CognitoAccessToken & { email: string }>(sessionStorage);
 
 // Configure the user pool
 const userPool = new CognitoUserPool({
@@ -31,12 +31,12 @@ authenticator.use(
       // the type of this user must match the type you pass to the Authenticator
       // the strategy will automatically inherit the type if you instantiate
       // directly inside the `use` method
-    return new Promise<CognitoAccessToken>((resolve, reject) => {
+    return new Promise<CognitoAccessToken & { email: string }>((resolve, reject) => {
         user.authenticateUser(authenticationDetails, {
             onSuccess: (result) => {
                 const session = user.getSignInUserSession()?.getAccessToken();
                 if (session) {
-                    resolve(session);
+                    resolve({ ...session, email: email!.toString() });
                 } else {
                     reject(new Error("Failed to get user session."));
                 }

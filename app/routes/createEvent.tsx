@@ -3,10 +3,10 @@ import {
   Box, CloseButton, Flex, Text, Icon, Stack, Link as ChakraLink, Drawer, Select, FormErrorMessage,
   DrawerContent, useDisclosure, FormControl, FormLabel, Input, Button, Heading, useColorModeValue, useToast
 } from "@chakra-ui/react";
-import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings } from "react-icons/fi";
+import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings, FiPlusCircle } from "react-icons/fi";
 import { IconType } from "react-icons";
 import React from 'react';
-import axios from 'axios';
+import { getSession } from '../session.server'
 
 export let loader = async () => {
   // Simulate fetching card data
@@ -22,7 +22,9 @@ const sportsList = ['Football', 'Badminton'];
 // Define LinkItems with routes
 const LinkItems = [
   { name: 'Home', icon: FiHome, to: '/dashboard' },
+  { name: 'Scheduled Events', icon: FiTrendingUp, to: '/events' },
   { name: 'Trending', icon: FiTrendingUp, to: '/trending' },
+  { name: 'My Scheduled Streams', icon: FiPlusCircle, to: '/scheduledStreams' },
   { name: 'Explore', icon: FiCompass, to: '/explore' },
   { name: 'Favourites', icon: FiStar, to: '/favourites' },
   { name: 'Settings', icon: FiSettings, to: '/settings' },
@@ -113,7 +115,6 @@ export async function action({ request }) {
   const eventDate = formData.get('event_date');
   const duration = formData.get('duration');
   const description = formData.get('description');
-  const accountEmail = formData.get('account_email');
   const isSports = formData.get('is_sports') === 'true';
   const sportName = isSports ? formData.get('sport_name') : null;
   const thumbnail = formData.get('thumbnail');
@@ -130,6 +131,9 @@ export async function action({ request }) {
   // axios.put('url', thumbnail).then(response => {
   //    alert("Image uploaded: " + thumbnail.name);
   // });
+
+  const session = await getSession(request.headers.get('Cookie'));
+  const accountEmail = session.data.user.email
 
   // Call the API with the event data
   const response = await fetch('https://1mqt3o8gkl.execute-api.us-east-1.amazonaws.com/dev/user/schedule-event', {
@@ -155,7 +159,6 @@ export async function action({ request }) {
     formData.set('event_date', '');
     formData.set('duration', '');
     formData.set('description', '');
-    formData.set('account_email', '');
     formData.set('is_sports', 'false');
     formData.set('sport_name', '');
     formData.set('thumbnail', null);
@@ -256,10 +259,6 @@ export default function EventForm() {
                 <FormControl id="description">
                   <FormLabel>Description</FormLabel>
                   <Input type="text" name="description" required />
-                </FormControl>
-                <FormControl id="account_email">
-                  <FormLabel>Account Email</FormLabel>
-                  <Input type="email" name="account_email" required />
                 </FormControl>
                 <FormControl id="is_sports">
                   <FormLabel>Is Sports Event?</FormLabel>
