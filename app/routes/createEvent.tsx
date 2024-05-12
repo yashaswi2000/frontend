@@ -243,7 +243,7 @@ export default function EventForm() {
                 </FormControl>
                 <FormControl id="event_date">
                   <FormLabel>Event Date</FormLabel>
-                  <Input type="date" name="event_date" required />
+                  <Input type="datetime-local" name="event_date" required />
                 </FormControl>
                 <FormControl id="duration" isInvalid={durationError !== ''}>
                   <FormLabel>Duration (in minutes)</FormLabel>
@@ -301,5 +301,6 @@ export default function EventForm() {
         </Stack>
       </Flex>
     </SidebarWithHeader>
+    
   );
 }

@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react";
 import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings, FiPlusCircle } from "react-icons/fi";
 import { IconType } from "react-icons";
-import Card from '../components/Card';
+import Card from '../components/MyStreamCard';
 import { getSession } from '../session.server'
 
 export let loader = async ({ request }) => {
@@ -29,15 +29,15 @@ export let loader = async ({ request }) => {
 
   // Parse the response body as JSON
   let data = await response.json();
-  console.log(data)
   // Simulate fetching card data
   return data.results.map((stream: { event_id: number, event_title: string, imageUrl: string, event_description: string, event_time: string}) => {
     return {
       id: stream.event_id,
+      event_id: stream.event_id,
       title: stream.event_title,
       imageUrl: 'https://www.usnews.com/dims4/USNEWS/72c90e6/17177859217/resize/800x540%3E/quality/85/?url=https%3A%2F%2Fmedia.beam.usnews.com%2F9d%2Fd819230374ef6531890bb7eee1dac0%2FNYU_WSP_Header.jpg',
       description: stream.event_description,
-      time: Date.parse(stream.event_time).toLocaleString(),
+      time: new Date(stream.event_time).toLocaleString(),
     };
   })
 };
@@ -133,27 +133,27 @@ function SidebarWithHeader({ children }: { children: React.ReactNode }) {
 }
 
 export default function Dashboard() {
-        const cards = useLoaderData() as { id: number, title: string, imageUrl: string, description: string , time: string}[];
-        return (
-            <SidebarWithHeader>
-            <Box p="4">
-                <Heading mb="4">Scheduled Streams </Heading>
-                <Flex overflowX="scroll" gap="3">
-                    {cards.map(card => (
-                        <Card key={card.id} {...card} />
-                    ))}
-                </Flex>
-                <Button
-                  as={Link}
-                  to="/createEvent"
-                  colorScheme="blue"
-                  leftIcon={<FiPlusCircle />}
-                  mr={4}
-                >
-                  Create Event
-                </Button>
-            </Box>
-            </SidebarWithHeader>
-        );
-    }
+  const cards = useLoaderData() as { id: number, title: string, imageUrl: string, description: string , time: string, event_id: string}[];
+  return (
+    <SidebarWithHeader>
+    <Box p="4">
+      <Heading mb="4">Scheduled Streams </Heading>
+      <Flex overflowX="scroll" gap="3">
+        {cards.map(card => (
+            <Card key={card.id} {...card} />
+        ))}
+      </Flex>
+      <Button
+        as={Link}
+        to="/createEvent"
+        colorScheme="blue"
+        leftIcon={<FiPlusCircle />}
+        mr={4}
+      >
+        Create Event
+      </Button>
+    </Box>
+    </SidebarWithHeader>
+  );
+}
   
