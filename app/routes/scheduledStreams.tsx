@@ -5,8 +5,7 @@ import {
   Heading,
   Button
 } from "@chakra-ui/react";
-import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings, FiPlusCircle } from "react-icons/fi";
-import { IconType } from "react-icons";
+import { FiPlusCircle } from "react-icons/fi";
 import Card from '../components/MyStreamCard';
 import { getSession } from '../session.server'
 import SidebarWithHeader from '~/components/SidebarWithHeader';

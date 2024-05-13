@@ -15,7 +15,7 @@ export default function Card({ id, title, imageUrl, description, time }: { id: n
       });
 
       if (response.ok) {
-        navigate('/homepage');
+        navigate('/liveStreams');
       } else if (response.status == 409){
         toast({
           title: 'Error',
@@ -45,6 +45,46 @@ export default function Card({ id, title, imageUrl, description, time }: { id: n
     }
   };
 
+  const handleDeleteStreaming = async () => {
+    try {
+      const response = await fetch(`https://1mqt3o8gkl.execute-api.us-east-1.amazonaws.com/dev/stream/delete`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ event_id: id }),
+      });
+
+      if (response.ok) {
+        toast({
+          title: 'Success',
+          description: 'Successfully deleted the event',
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        });
+        navigate('/scheduledStreams');
+      } else {
+        toast({
+          title: 'Error',
+          description: 'Failed to delete the event',
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      console.error('Error deleting stream:', error);
+      toast({
+        title: 'Error',
+        description: 'An error occurred while deleting a stream.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <Box
       maxW="sm"
@@ -63,6 +103,9 @@ export default function Card({ id, title, imageUrl, description, time }: { id: n
         </Text>
         <Button mt="3" colorScheme="teal" onClick={handleStartStreaming}>
           Start Streaming
+        </Button>
+        <Button mt="3" ml="14" colorScheme="red" onClick={handleDeleteStreaming}>
+          Delete Event
         </Button>
       </Box>
     </Box>
