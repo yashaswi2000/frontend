@@ -55,6 +55,7 @@ export async function action({ request }) {
       sport_name: sportName,
     }),
   });
+  const data = await response.json()
 
   if (response.ok) {
     // Reset the form fields
@@ -66,6 +67,19 @@ export async function action({ request }) {
     formData.set('sport_name', '');
     formData.set('thumbnail', null);
 
+    const elasticResponse = await fetch('https://1mqt3o8gkl.execute-api.us-east-1.amazonaws.com/dev/user/schedule-event/index-event', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        event_id: data.event_id,
+        description: description,
+      })
+    })
+
+    if(!elasticResponse.ok)
+      return { error: 'Failed to insert to elastic search' }
     return { success: 'Event scheduled successfully' };
   } else {
     return { error: 'Failed to schedule the event' };

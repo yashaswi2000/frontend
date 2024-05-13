@@ -4,7 +4,6 @@ import { Link, useNavigate } from '@remix-run/react';
 export default function Card({ id, title, imageUrl, description, time, playback_url }: { id: number, title: string, imageUrl: string, description: string , time: string, playback_url: string}) {
   const toast = useToast();
   const navigate = useNavigate();
-  console.log(playback_url)
   const handleDeleteStreaming = async () => {
     try {
       const response = await fetch(`https://1mqt3o8gkl.execute-api.us-east-1.amazonaws.com/dev/stream/delete`, {

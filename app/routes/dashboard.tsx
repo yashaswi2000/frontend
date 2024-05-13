@@ -41,7 +41,6 @@ export let loader = async ({request}) => {
 
   // Parse the response body as JSON
   let data = await response.json();
-  console.log(data)
   // Simulate fetching card data
   return {
     cards_live: data.live.map((stream: { event_id: number, event_title: string, imageUrl: string, event_description: string, event_time: string, playback_url: string }) => {
