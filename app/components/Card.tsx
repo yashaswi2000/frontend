@@ -1,7 +1,7 @@
 import { Box, Image, Text, Button, useToast } from '@chakra-ui/react';
 import { Link, useNavigate } from '@remix-run/react';
 
-export default function Card({ id, title, imageUrl, description, time }: { id: number, title: string, imageUrl: string, description: string , time: string}) {
+export default function Card({ id, title, imageUrl, description, time, playback_url }: { id: number, title: string, imageUrl: string, description: string , time: string, playback_url: string}) {
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -60,8 +60,8 @@ export default function Card({ id, title, imageUrl, description, time }: { id: n
             {time}
         </Text>
         <Link to={{
-            pathname: "/viewstream",
-            search: "?play_back_url=https://145742c78c44.us-east-1.playback.live-video.net/api/video/v1/us-east-1.211125489044.channel.j0tIJIU7vA3E.m3u8",
+            pathname: "/homepage",
+            // search: "?play_back_url="+playback_url,
         }}>
         <Button mt="3" colorScheme="teal">Learn More</Button>
         <Button mt="3" ml="14" colorScheme="red" onClick={handleDeleteStreaming}>
