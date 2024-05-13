@@ -22,7 +22,7 @@ export default function Card({ id, title, imageUrl, description, time, playback_
         </Text>
         <Link to={{
             pathname: "/viewStream",
-            search: "?play_back_url="+playback_url,
+            search: "?play_back_url="+playback_url+"&id="+id,
         }}>
         <Button mt="3" colorScheme="teal">Learn More</Button>
         </Link>
