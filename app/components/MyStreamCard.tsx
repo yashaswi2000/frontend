@@ -102,7 +102,7 @@ export default function Card({ id, title, imageUrl, description, time }: { id: n
           {time}
         </Text>
         <Button mt="3" colorScheme="teal" onClick={handleStartStreaming}>
-          Start Streaming
+          Start Event
         </Button>
         <Button mt="3" ml="14" colorScheme="red" onClick={handleDeleteStreaming}>
           Delete Event

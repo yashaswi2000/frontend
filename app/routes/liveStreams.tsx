@@ -1,6 +1,6 @@
 import { useLoaderData, Link } from '@remix-run/react';
 import { Box, Flex, Heading, Button } from "@chakra-ui/react";
-import Card from '../components/Card';
+import Card from '../components/LiveCard';
 import { getSession } from '../session.server'
 import SidebarWithHeader from '~/components/SidebarWithHeader';
 
