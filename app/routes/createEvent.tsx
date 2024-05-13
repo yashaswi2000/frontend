@@ -10,7 +10,7 @@ import { getSession } from '../session.server'
 import SidebarWithHeader from '~/components/SidebarWithHeader';
 
 
-const sportsList = ['Football', 'Badminton'];
+const sportsList = ['soccer', 'badminton'];
 
 export async function action({ request }) {
   const formData = await request.formData();

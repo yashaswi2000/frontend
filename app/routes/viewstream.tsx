@@ -3,7 +3,7 @@ import { getSession } from '../session.server'
 import SidebarWithHeader from '~/components/SidebarWithHeader';
 import { Suspense, lazy } from "react";
 
-const sportsList = ['Football', 'Badminton'];
+const sportsList = ['soccer', 'badminton'];
 
 export async function loader({ request }) {
     const session = await getSession(request.headers.get('Cookie'));
