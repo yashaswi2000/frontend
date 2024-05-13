@@ -27,7 +27,7 @@ export let loader = async ({ request }) => {
   // Simulate fetching card data
     return {
       stream_key: data.stream_key,
-      ingest_url: data.ingest_url,
+      ingest_url: `rtmps://${data.ingest_url}:443/app/`,
     };
 };
 

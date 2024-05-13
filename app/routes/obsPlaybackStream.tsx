@@ -53,7 +53,7 @@ export async function loader({ request }) {
         event_id,
         q,
         stream_key: data.stream_key,
-        ingest_url: `${data.ingest_url}`,
+        ingest_url: `rtmps://${data.ingest_url}:443/app/`,
         channel_arn: data.channel_arn,
         eventTypes: eventTypes?.events,
         is_sports,

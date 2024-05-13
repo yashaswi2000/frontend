@@ -77,7 +77,7 @@ export default function HomePage({ stream_details }) {
         <div>
           <h2>Stream Details</h2>
           <p>Stream Key: {stream_details.stream_key}</p>
-          <p>Ingest URL: {stream_details.ingest_url}</p>
+          <p>Ingest URL: rtmps://{stream_details.ingest_url}:443/app/</p>
         </div>
       </div>
       
