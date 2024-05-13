@@ -1,9 +1,9 @@
-import { useSubmit, useLoaderData, redirect } from '@remix-run/react';
+import { useSubmit, useLoaderData, redirect, useNavigate } from '@remix-run/react';
 import {
   Box, Flex, useDisclosure, Heading, Modal, ModalOverlay, ModalContent, ModalHeader,
   ModalFooter, ModalBody, ModalCloseButton, FormControl, FormLabel, Input, Button,
 } from "@chakra-ui/react";
-import React from 'react';
+import React, { useState } from 'react';
 import Card from '../components/Card';
 import { getSession } from '~/session.server';
 import SidebarWithHeader from '~/components/SidebarWithHeader';
@@ -41,6 +41,7 @@ export let loader = async ({request}) => {
 
   // Parse the response body as JSON
   let data = await response.json();
+  console.log(data)
   // Simulate fetching card data
   return {
     cards_live: data.live.map((stream: { event_id: number, event_title: string, imageUrl: string, event_description: string, event_time: string, playback_url: string }) => {
@@ -72,6 +73,8 @@ export default function Dashboard() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [reason, setReason] = React.useState('');
   const submit = useSubmit();
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleReasonChange = (event) => {
     setReason(event.target.value);
@@ -103,9 +106,23 @@ export default function Dashboard() {
     }
   };
 
+  const handleSearch = (event) => {
+    if (event.key === 'Enter') {
+      navigate(`/searchedEvents?q=${searchQuery}`);
+    }
+  };
+
   return (
     <SidebarWithHeader>
       <Box p="4">
+        <Flex justifyContent="space-between" alignItems="center" mb="4">
+          <Input
+            placeholder="Search for events"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleSearch}
+          />
+        </Flex>
         <Flex justifyContent="space-between" alignItems="center" mb="4">
           <Heading>Live NOW</Heading>
           <Button colorScheme="blue" onClick={onOpen}>
