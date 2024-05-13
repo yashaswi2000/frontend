@@ -17,8 +17,6 @@ export async function loader({ request }) {
     return json({ q });
 }
 
-
-
 const ClientComponent = lazy(() => import("../VideoPlayer.client"));
 
 export default function ViewStream() {

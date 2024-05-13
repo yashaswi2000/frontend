@@ -44,13 +44,14 @@ export let loader = async ({request}) => {
   console.log(data)
   // Simulate fetching card data
   return {
-    cards_live: data.live.map((stream: { event_id: number, event_title: string, imageUrl: string, event_description: string, event_time: string }) => {
+    cards_live: data.live.map((stream: { event_id: number, event_title: string, imageUrl: string, event_description: string, event_time: string, playback_url: string }) => {
       return {
         id: stream.event_id,
         title: stream.event_title,
         imageUrl: 'https://www.usnews.com/dims4/USNEWS/72c90e6/17177859217/resize/800x540%3E/quality/85/?url=https%3A%2F%2Fmedia.beam.usnews.com%2F9d%2Fd819230374ef6531890bb7eee1dac0%2FNYU_WSP_Header.jpg',
         description: stream.event_description,
-        time: new Date(stream.event_time).toLocaleString()
+        time: new Date(stream.event_time).toLocaleString(),
+        playback_url: stream.playback_url
       };
     }),
     cards_scheduled: data.scheduled.map((stream: { event_id: number, event_title: string, imageUrl: string, event_description: string, event_time: string }) => {
