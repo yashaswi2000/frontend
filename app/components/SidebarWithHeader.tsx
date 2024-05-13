@@ -1,24 +1,17 @@
-import { useSubmit, useLoaderData, Link, redirect } from '@remix-run/react';
+import { Link } from '@remix-run/react';
 import {
-  Box, CloseButton, Flex, Text, Icon, IconButton, VStack, Link as ChakraLink, Drawer,
+  Box, CloseButton, Flex, Text, Icon, Link as ChakraLink, Drawer,
   DrawerContent, useDisclosure, useColorModeValue,
-  Heading, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton,
-  FormControl,
-  FormLabel,
-  Input,
-  Button,
 } from "@chakra-ui/react";
 import React from 'react';
-import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings, FiPlusCircle, FiGitPullRequest } from "react-icons/fi";
+import { FiHome, FiStar, FiSettings, FiGitPullRequest, FiTarget } from "react-icons/fi";
 import { IconType } from "react-icons";
 
 // Define LinkItems with routes
 const LinkItems = [
     { name: 'Home', icon: FiHome, to: '/dashboard' },
-    { name: 'Scheduled Events', icon: FiTrendingUp, to: '/events' },
-    { name: 'Trending', icon: FiTrendingUp, to: '/trending' },
-    { name: 'My Scheduled Streams', icon: FiPlusCircle, to: '/scheduledStreams' },
-    { name: 'Explore', icon: FiCompass, to: '/explore' },
+    { name: 'My Scheduled Streams', icon: FiGitPullRequest, to: '/scheduledStreams' },
+    { name: 'My Live Stream', icon: FiTarget, to: '/liveStreams' },
     { name: 'Favourites', icon: FiStar, to: '/favourites' },
     { name: 'Settings', icon: FiSettings, to: '/settings' },
     { name: 'Logout', icon: FiSettings, to: '/logout' },

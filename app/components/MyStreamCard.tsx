@@ -16,6 +16,14 @@ export default function Card({ id, title, imageUrl, description, time }: { id: n
 
       if (response.ok) {
         navigate('/homepage');
+      } else if (response.status == 409){
+        toast({
+          title: 'Error',
+          description: 'User already has a live event',
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
       } else {
         toast({
           title: 'Error',

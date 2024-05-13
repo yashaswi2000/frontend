@@ -2,6 +2,11 @@ import { Form, useRouteLoaderData, json, useFetcher, redirect, useLoaderData } f
 import { Box, Button, FormControl, FormLabel, Input, VStack } from "@chakra-ui/react";
 import { AuthenticationDetails, CognitoUser, CognitoUserAttribute, CognitoUserPool } from 'amazon-cognito-identity-js';
 
+// Configure the user pool
+const userPool = new CognitoUserPool({
+  UserPoolId: 'us-east-1_36FZw7fIp',
+  ClientId: '24jlv5nsbvts161ign2nl1903k',
+});
 
 export let loader = async ({ request }: { request: Request }) => {
     // Prepare any data for the component
