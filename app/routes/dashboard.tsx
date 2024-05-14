@@ -15,6 +15,7 @@ type Cards = {
   description: string;
   time: string;
   streamer_email: string;
+  recording?: string;
 }[];
 
 type LoaderData = {
@@ -78,7 +79,7 @@ export let loader = async ({request}) => {
         streamer_email: stream.event_streamer,
       };
     }),
-    cards_vod: data.vod.map((stream: { event_id: number, event_streamer: string, event_title: string, imageUrl: string, event_description: string, event_time: string }) => {
+    cards_vod: data.vod.map((stream: { event_id: number, event_streamer: string, event_title: string, imageUrl: string, event_description: string, event_time: string, recording: string }) => {
       return {
         id: stream.event_id,
         title: stream.event_title,
@@ -86,6 +87,7 @@ export let loader = async ({request}) => {
         description: stream.event_description,
         time: new Date(stream.event_time).toLocaleString(),
         streamer_email: stream.event_streamer,
+        recording: stream.recording,
       };
     }),
     accountEmail,
@@ -165,7 +167,7 @@ export default function Dashboard() {
         </Flex>
         <Flex overflowX="scroll" gap="3">
           {cards_live.map(card => (
-            <Card key={card.id} {...card} user_email={accountEmail}/>
+            <Card key={card.id} {...card} user_email={accountEmail} type={'live'}/>
           ))}
         </Flex>
         <Flex justifyContent="space-between" alignItems="center" mb="4">
@@ -173,7 +175,7 @@ export default function Dashboard() {
         </Flex>
         <Flex overflowX="scroll" gap="3">
           {cards_scheduled.map(card => (
-            <Card key={card.id} {...card} user_email={accountEmail}/>
+            <Card key={card.id} {...card} user_email={accountEmail} type={'scheduled'}/>
           ))}
         </Flex>
         <Flex justifyContent="space-between" alignItems="center" mb="4">
@@ -181,7 +183,7 @@ export default function Dashboard() {
         </Flex>
         <Flex overflowX="scroll" gap="3">
           {cards_vod.map(card => (
-            <Card key={card.id} {...card} user_email={accountEmail}/>
+            <Card key={card.id} {...card} user_email={accountEmail} type={'vod'}/>
           ))}
         </Flex>
       </Box>
