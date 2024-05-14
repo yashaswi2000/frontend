@@ -6,7 +6,6 @@ import { useLoaderData } from '@remix-run/react';
 import EventTable from './components/EventTable';
 
 const VideoPlayer = ({ streamUrl }) => {
-    console.log(streamUrl);
     const [events, setEvents] = useState(streamUrl.events);
     const videoRef = useRef(null);
     useEffect(() => {
@@ -55,6 +54,9 @@ const VideoPlayer = ({ streamUrl }) => {
         <div>
             <video ref={videoRef} playsInline controls />
             <EventTable events={events} />
+        </div>
+        <div>
+            <Chat email={streamUrl.accountEmail} chatroom={streamUrl.chatroom} is_owner={0} />
         </div>
         </div>
     ); 

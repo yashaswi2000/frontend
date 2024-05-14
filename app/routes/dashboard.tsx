@@ -58,7 +58,7 @@ export let loader = async ({request}) => {
   let data = await response.json();
   // Simulate fetching card data
   return {
-    cards_live: data.live.map((stream: { event_id: number, event_streamer: string, event_title: string, imageUrl: string, event_description: string, event_time: string, playback_url: string }) => {
+    cards_live: data.live.map((stream: { event_id: number, event_streamer: string, event_title: string, imageUrl: string, event_description: string, event_time: string, playback_url: string , chatroom: string}) => {
       return {
         id: stream.event_id,
         title: stream.event_title,
@@ -67,6 +67,7 @@ export let loader = async ({request}) => {
         time: new Date(stream.event_time).toLocaleString(),
         playback_url: stream.playback_url,
         streamer_email: stream.event_streamer,
+        chatroom: stream.chatroom,
       };
     }),
     cards_scheduled: data.scheduled.map((stream: { event_id: number, event_streamer: string, event_title: string, imageUrl: string, event_description: string, event_time: string }) => {

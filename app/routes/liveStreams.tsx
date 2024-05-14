@@ -24,7 +24,7 @@ export let loader = async ({ request }) => {
   // Parse the response body as JSON
   let data = await response.json();
   // Simulate fetching card data
-  return data.results.map((stream: { event_id: number, event_title: string, imageUrl: string, event_description: string, event_time: string, playback_url: string, is_sports: string, sport_name: string }) => {
+  return data.results.map((stream: { event_id: number, event_title: string, imageUrl: string, event_description: string, event_time: string, playback_url: string, is_sports: string, sport_name: string , chatroom: string}) => {
     return {
       id: stream.event_id,
       title: stream.event_title,
@@ -34,12 +34,13 @@ export let loader = async ({ request }) => {
       playback_url: stream.playback_url,
       is_sports: stream.is_sports,
       sport_name: stream.sport_name,
+      chatroom: stream.chatroom
     };
   })
 };
 
 export default function Dashboard() {
-  const cards = useLoaderData() as { id: number, title: string, imageUrl: string, description: string , time: string, playback_url: string, is_sports: string, sport_name: string }[];
+  const cards = useLoaderData() as { id: number, title: string, imageUrl: string, description: string , time: string, playback_url: string, is_sports: string, sport_name: string , chatroom: string}[];
   return (
     <SidebarWithHeader hasAccess={1}>
     <Box p="4">

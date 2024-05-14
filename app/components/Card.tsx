@@ -2,7 +2,7 @@ import { Box, Image, Text, Button, useToast } from '@chakra-ui/react';
 import { Link, useNavigate } from '@remix-run/react';
 import { useState } from 'react';
 
-export default function Card({ id, title, imageUrl, description, time, playback_url, streamer_email, user_email, recording, type }: { id: number, title: string, imageUrl: string, description: string , time: string, playback_url: string, streamer_email: string, user_email: string, recording: string, type: string }) {
+export default function Card({ id, title, imageUrl, description, time, playback_url, streamer_email, user_email, recording, type, chatroom }: { id: number, title: string, imageUrl: string, description: string , time: string, playback_url: string, streamer_email: string, user_email: string, recording: string, type: string, chatroom: string}) {
   const toast = useToast();
   const navigate = useNavigate();
   const [isImageValid, setIsImageValid] = useState(true);
@@ -16,7 +16,7 @@ export default function Card({ id, title, imageUrl, description, time, playback_
     if (type === 'live') {
       navigate({
         pathname: "/viewStream",
-        search: `?play_back_url=${playback_url}&id=${id}`,
+        search: `?play_back_url=${playback_url}&id=${id}&chatroom=${chatroom}`,
       });
     } else if (type === 'vod') {
       window.open(recording, '_blank');

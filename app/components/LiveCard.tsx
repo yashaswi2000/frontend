@@ -2,7 +2,7 @@ import { Box, Image, Text, Button, useToast, Modal, ModalOverlay, ModalContent, 
 import { Link, useNavigate } from '@remix-run/react';
 import { useState } from 'react';
 
-export default function Card({ id, title, imageUrl, description, time, playback_url, is_sports, sport_name }: { id: number, title: string, imageUrl: string, description: string, time: string, playback_url: string, is_sports: string, sport_name: string }) {
+export default function Card({ id, title, imageUrl, description, time, playback_url, is_sports, sport_name, chatroom}: { id: number, title: string, imageUrl: string, description: string, time: string, playback_url: string, is_sports: string, sport_name: string , chatroom: string}) {
   const toast = useToast();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -63,7 +63,7 @@ export default function Card({ id, title, imageUrl, description, time, playback_
 
   const handleOBSStream = () => {
     // Navigate to the OBS stream page
-    navigate(`/obsPlaybackStream?q=${playback_url}&id=${id}&is_sports=${is_sports}&sport_name=${sport_name}`);
+    navigate(`/obsPlaybackStream?q=${playback_url}&id=${id}&is_sports=${is_sports}&sport_name=${sport_name}&chatroom=${chatroom}`);
     handleCloseModal();
   };
 

@@ -16,4 +16,4 @@ export const CHAT_REGION = "us-east-1";
 export const API_URL = "https://1mqt3o8gkl.execute-api.us-east-1.amazonaws.com/dev/user/chat";
 
 // Chat room id (ARN)
-export const CHAT_ROOM_ID = "arn:aws:ivschat:us-east-1:211125489044:room/zs4YvFLZj3Ey";
+export const CHAT_ROOM_ID = "arn:aws:ivschat:us-east-1:211125489044:room/g5lmyFSx9OC6";

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT-0
 
 import React, { useEffect, useState, useRef, createRef } from 'react';
+import { Box, Input, Button, VStack, HStack, Heading, Text, Image } from "@chakra-ui/react";
 import Linkify from 'linkify-react';
 import axios from 'axios';
 import {
@@ -22,7 +23,7 @@ import RaiseHand from './RaiseHand';
 // Styles
 import './Chat.css';
 
-const Chat = () => {
+const Chat = ({email, chatroom, is_owner}) => {
   const [showSignIn, setShowSignIn] = useState(true);
   const [username, setUsername] = useState('');
   const [moderator, setModerator] = useState(false);
@@ -38,25 +39,17 @@ const Chat = () => {
   const messagesEndRef = createRef();
 
   // Fetches a chat token
-  const tokenProvider = async (selectedUsername, isModerator, avatarUrl) => {
-    const uuid = uuidv4();
-    const permissions = isModerator
-      ? ['SEND_MESSAGE', 'DELETE_MESSAGE', 'DISCONNECT_USER']
-      : ['SEND_MESSAGE'];
+  const tokenProvider = async () => {
 
     const data = {
-      arn: config.CHAT_ROOM_ID,
-      userId: `${selectedUsername}.${uuid}`,
-      attributes: {
-        username: `${selectedUsername}`,
-        avatar: `${avatarUrl.src}`,
-      },
-      capabilities: permissions,
+      room_arn: chatroom,
+      account_email: email,
+      is_owner: is_owner,
     };
 
     var token;
     try {
-      const response = await axios.get(`${config.API_URL}/get-token`, data);
+      const response = await axios.get(`${config.API_URL}/get-token`, {params:data});
       token = {
         token: response.data.token,
         sessionExpirationTime: new Date(response.data.sessionExpirationTime),
@@ -69,18 +62,18 @@ const Chat = () => {
     return token;
   };
 
-  const handleSignIn = (selectedUsername, isModerator, avatarUrl) => {
-    // Set application state
-    setUsername(selectedUsername);
-    setModerator(isModerator);
+  const handleSignIn = () => {
 
     // Instantiate a chat room
     const room = new ChatRoom({
       regionOrUrl: config.CHAT_REGION,
       tokenProvider: () =>
-        tokenProvider(selectedUsername, isModerator, avatarUrl),
+        tokenProvider(),
     });
     setChatRoom(room);
+
+    setUsername(email);
+    setModerator(is_owner? true: false);
 
     // Connect to the chat room
     room.connect();
@@ -217,9 +210,8 @@ const Chat = () => {
   };
 
   const handleMessage = (data) => {
-    const username = data.sender.attributes.username;
+    const username = data.sender.userId;
     const userId = data.sender.userId;
-    const avatar = data.sender.attributes.avatar;
     const message = data.content;
     const messageId = data.id;
     const timestamp = data.sendTime;
@@ -229,7 +221,6 @@ const Chat = () => {
       timestamp,
       username,
       userId,
-      avatar,
       message,
       messageId,
     };
@@ -313,9 +304,8 @@ const Chat = () => {
   };
 
   const handleSticker = (data) => {
-    const username = data.sender.attributes?.username;
+    const username = data.sender.userId;
     const userId = data.sender.userId;
-    const avatar = data.sender.attributes.avatar;
     const message = data.content;
     const sticker = data.attributes.sticker_src;
     const messageId = data.id;
@@ -326,7 +316,6 @@ const Chat = () => {
       timestamp,
       username,
       userId,
-      avatar,
       message,
       messageId,
       sticker,
@@ -486,29 +475,29 @@ const Chat = () => {
 
   const renderMessage = (message) => {
     return (
-      <div className='chat-line-wrapper' key={message.id}>
-        <div className='chat-line'>
-          <img
-            className='chat-line-img'
-            src={message.avatar}
-            alt={`Avatar for ${message.username}`}
-          />
-          <p>
-            <span className='username'>{message.username}</span>
-            <Linkify
-              options={{
-                ignoreTags: ['script', 'style'],
-                nl2br: true,
-                rel: 'noopener noreferrer',
-                target: '_blank',
-              }}
-            >
-              {message.message}
-            </Linkify>
-          </p>
-        </div>
-        {moderator ? renderChatLineActions(message) : ''}
-      </div>
+      <VStack className='chat-line-wrapper' key={message.id}>
+      <HStack className='chat-line'>
+        <Image
+          className='chat-line-img'
+          src={message.avatar}
+          alt={`Avatar for ${message.username}`}
+        />
+        <Text>
+          <Box as="span" className='username'>{message.username}</Box>
+          <Linkify
+            options={{
+              ignoreTags: ['script', 'style'],
+              nl2br: true,
+              rel: 'noopener noreferrer',
+              target: '_blank',
+            }}
+          >
+            {message.message}
+          </Linkify>
+        </Text>
+      </HStack>
+      {moderator ? renderChatLineActions(message) : ''}
+    </VStack>    
     );
   };
 
@@ -568,20 +557,73 @@ const Chat = () => {
   };
 
   return (
+    // <>
+    //   <header>
+    //     <h1>Amazon IVS Chat Web Demo</h1>
+    //   </header>
+    //   <div className='main full-width full-height chat-container'>
+    //     <div className='content-wrapper mg-2'>
+    //       <div className='col-wrapper'>
+    //         <div className='chat-wrapper'>
+    //           <div className='messages'>
+    //             {renderMessages()}
+    //             <div ref={messagesEndRef} />
+    //           </div>
+    //           <div className='composer fl fl-j-center'>
+    //             <input
+    //               ref={chatRef}
+    //               className={`rounded mg-r-1 ${!username ? 'hidden' : ''}`}
+    //               type='text'
+    //               placeholder={
+    //                 isChatConnected()
+    //                   ? 'Say something'
+    //                   : 'Waiting to connect...'
+    //               }
+    //               value={message}
+    //               maxLength={500}
+    //               disabled={!isChatConnected()}
+    //               onChange={handleChange}
+    //               onKeyDown={handleKeyDown}
+    //             />
+    //             {isChatConnected() && (
+    //               <StickerPicker handleStickerSend={handleStickerSend} />
+    //             )}
+    //             {isChatConnected() && (
+    //               <RaiseHand
+    //                 isRaised={handRaised}
+    //                 handleRaiseHandSend={handleRaiseHandSend}
+    //               />
+    //             )}
+    //             {!username && (
+    //               <fieldset>
+    //                 <button
+    //                   onClick={handleSignIn}
+    //                   className='btn btn--primary full-width rounded'
+    //                 >
+    //                   Join the chat room
+    //                 </button>
+    //               </fieldset>
+    //             )}
+    //           </div>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>
+    // </>
     <>
-      <header>
-        <h1>Amazon IVS Chat Web Demo</h1>
-      </header>
-      <div className='main full-width full-height chat-container'>
-        <div className='content-wrapper mg-2'>
-          <div className='col-wrapper'>
-            <div className='chat-wrapper'>
-              <div className='messages'>
+      <Box as="header">
+        <Heading>Amazon IVS Chat Web Demo</Heading>
+      </Box>
+      <VStack className='main full-width full-height chat-container'>
+        <VStack className='content-wrapper mg-2'>
+          <VStack className='col-wrapper'>
+            <VStack className='chat-wrapper'>
+              <VStack className='messages'>
                 {renderMessages()}
                 <div ref={messagesEndRef} />
-              </div>
-              <div className='composer fl fl-j-center'>
-                <input
+              </VStack>
+              <HStack className='composer fl fl-j-center'>
+                <Input
                   ref={chatRef}
                   className={`rounded mg-r-1 ${!username ? 'hidden' : ''}`}
                   type='text'
@@ -592,7 +634,7 @@ const Chat = () => {
                   }
                   value={message}
                   maxLength={500}
-                  disabled={!isChatConnected()}
+                  isDisabled={!isChatConnected()}
                   onChange={handleChange}
                   onKeyDown={handleKeyDown}
                 />
@@ -607,20 +649,19 @@ const Chat = () => {
                 )}
                 {!username && (
                   <fieldset>
-                    <button
-                      onClick={handleOnClick}
+                    <Button
+                      onClick={handleSignIn}
                       className='btn btn--primary full-width rounded'
                     >
                       Join the chat room
-                    </button>
+                    </Button>
                   </fieldset>
                 )}
-              </div>
-            </div>
-          </div>
-        </div>
-        {showSignIn && <SignIn handleSignIn={handleSignIn} />}
-      </div>
+              </HStack>
+            </VStack>
+          </VStack>
+        </VStack>
+      </VStack>
     </>
   );
 };

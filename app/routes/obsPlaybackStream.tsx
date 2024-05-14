@@ -19,6 +19,7 @@ export async function loader({ request }) {
     const q = url.searchParams.get("play_back_url");
     const sport_name = url.searchParams.get("sport_name");
     const is_sports = url.searchParams.get("is_sports");
+    const chatroom = url.searchParams.get("chatroom");
     const event_id = url.searchParams.get("id");
     let response = await fetch('https://1mqt3o8gkl.execute-api.us-east-1.amazonaws.com/dev/stream/get-stream-key-and-url', {
       method: 'POST',
@@ -50,14 +51,6 @@ export async function loader({ request }) {
       eventTypes = await eventTypesResponse.json();
     }
 
-    const ChatResponse = await fetch('https://1mqt3o8gkl.execute-api.us-east-1.amazonaws.com/dev/user/chat/create-room?event_id='+event_id, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-      });
-      const chatarn = await ChatResponse.json();
-
     // Simulate fetching card data
       return {
         event_id,
@@ -69,12 +62,12 @@ export async function loader({ request }) {
         is_sports,
         sport_name,
         account_email: accountEmail,
-        chatarn: chatarn.chat_arn
+        chatroom: chatroom
       };
 }
 
 export default function ViewStream() {
-  const stream_details = useLoaderData() as { event_id: number, channel_arn: string, q: string, stream_key: string, ingest_url: string, eventTypes: string[], sport_name: string, account_email: string, is_sports: number , chatarn: string};
+  const stream_details = useLoaderData() as { event_id: number, channel_arn: string, q: string, stream_key: string, ingest_url: string, eventTypes: string[], sport_name: string, account_email: string, is_sports: number , chatroom: string};
   const [score, setScore] = useState('');
   const [eventType, setEventType] = useState('');
   const [eventDescription, setEventDescription] = useState('');
@@ -180,7 +173,7 @@ export default function ViewStream() {
         )}
       </Box>
 
-      <Chat />
+      <Chat email={stream_details.account_email} chatroom={stream_details.chatroom} is_owner={1} />
       </div>
     </SidebarWithHeader>
   );

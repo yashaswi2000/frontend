@@ -12,9 +12,11 @@ export async function loader({ request }) {
             redirect: '/login',
         };
     }
+    const accountEmail = session.data.user.email;
     const url = new URL(request.url);
     const q = url.searchParams.get("play_back_url");
     const id = url.searchParams.get("id");
+    const chatroom = url.searchParams.get("chatroom");
     let response = await fetch('https://1mqt3o8gkl.execute-api.us-east-1.amazonaws.com/dev/stream/get-events', {
       method: 'POST',    
       headers: {
@@ -29,7 +31,7 @@ export async function loader({ request }) {
 
   // Parse the response body as JSON
   let data = await response.json();
-  return json({ url: q, id: id, events: data.items});
+  return json({ url: q, id: id, events: data.items, chatroom: chatroom, accountEmail: accountEmail});
 }
 
 const ClientComponent = lazy(() => import("../VideoPlayer.client"));

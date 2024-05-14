@@ -21,6 +21,13 @@ export default function Card({ id, title, imageUrl, description, time }: { id: n
         },
       });
 
+      const chat_room = await fetch(`https://1mqt3o8gkl.execute-api.us-east-1.amazonaws.com/dev/user/chat/create-room?event_id=${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
       if (response.ok) {
         navigate('/liveStreams');
       } else if (response.status == 409){
