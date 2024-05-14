@@ -29,7 +29,7 @@ export async function loader({ request }) {
 
   // Parse the response body as JSON
   let data = await response.json();
-  return json({ url: q, id: id, events: data.items });
+  return json({ url: q, id: id, events: data.items});
 }
 
 const ClientComponent = lazy(() => import("../VideoPlayer.client"));
@@ -42,7 +42,7 @@ export default function ViewStream() {
   return (
     <SidebarWithHeader>
       <Suspense fallback={<div>Loading...</div>}>
-        {navigation.state === "idle" && <ClientComponent streamUrl={streamUrl} setStreamUrl={setStreamUrl} />}
+        {navigation.state === "idle" && <ClientComponent streamUrl={streamUrl} />}
       </Suspense>
     </SidebarWithHeader>
   );

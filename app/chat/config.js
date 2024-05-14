@@ -13,7 +13,7 @@ export const CHAT_REGION = "us-east-1";
 
 // Chat API URL
 // The Amazon IVS Chat backend endpoint. You must deploy the serverless backend to get this value.
-export const API_URL = "https://1mqt3o8gkl.execute-api.us-east-1.amazonaws.com/dev/user/chat/";
+export const API_URL = "https://1mqt3o8gkl.execute-api.us-east-1.amazonaws.com/dev/user/chat";
 
 // Chat room id (ARN)
-export const CHAT_ROOM_ID = "arn:aws:ivschat:us-east-1:211125489044:room/YzkahVWD9FWR";
+export const CHAT_ROOM_ID = "arn:aws:ivschat:us-east-1:211125489044:room/zs4YvFLZj3Ey";

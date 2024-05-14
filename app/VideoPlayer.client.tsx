@@ -51,9 +51,11 @@ const VideoPlayer = ({ streamUrl }) => {
     }, []);
 
     return (
+        <div style={{ display: 'flex' }}>
         <div>
             <video ref={videoRef} playsInline controls />
             <EventTable events={events} />
+        </div>
         </div>
     ); 
 };

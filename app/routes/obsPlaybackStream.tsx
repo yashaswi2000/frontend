@@ -2,6 +2,7 @@ import { useLoaderData } from '@remix-run/react';
 import { getSession } from '../session.server'
 import { useState } from 'react';
 import { Box, Text, Input, Select, Button, Flex, Stack, Heading, useColorModeValue, FormLabel, FormControl } from '@chakra-ui/react';
+import Chat from '~/chat/Chat';
 
 const sportsList = ['soccer', 'badminton'];
 
@@ -48,6 +49,14 @@ export async function loader({ request }) {
       eventTypes = await eventTypesResponse.json();
     }
 
+    const ChatResponse = await fetch('https://1mqt3o8gkl.execute-api.us-east-1.amazonaws.com/dev/user/chat/create-room?event_id='+event_id, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      });
+      const chatarn = await ChatResponse.json();
+
     // Simulate fetching card data
       return {
         event_id,
@@ -58,12 +67,13 @@ export async function loader({ request }) {
         eventTypes: eventTypes?.events,
         is_sports,
         sport_name,
-        account_email: accountEmail
+        account_email: accountEmail,
+        chatarn: chatarn.chat_arn
       };
 }
 
 export default function ViewStream() {
-  const stream_details = useLoaderData() as { event_id: number, channel_arn: string, q: string, stream_key: string, ingest_url: string, eventTypes: string[], sport_name: string, account_email: string, is_sports: number };
+  const stream_details = useLoaderData() as { event_id: number, channel_arn: string, q: string, stream_key: string, ingest_url: string, eventTypes: string[], sport_name: string, account_email: string, is_sports: number , chatarn: string};
   const [score, setScore] = useState('');
   const [eventType, setEventType] = useState('');
   const [eventDescription, setEventDescription] = useState('');
@@ -110,6 +120,7 @@ export default function ViewStream() {
   };
 
   return (
+    <div style={{ display: 'flex' }}>
     <Box>
       <Stack spacing={4} mx={'auto'} maxW={'lg'} py={6} px={6}>
         <Stack align={'center'}>
@@ -166,5 +177,8 @@ export default function ViewStream() {
         </Stack>
       )}
     </Box>
+
+     <Chat />
+    </div>
   );
 }
