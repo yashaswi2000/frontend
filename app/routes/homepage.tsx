@@ -37,7 +37,7 @@ export default function ClientRoute() {
   const navigation = useNavigation();
   const stream_details = useLoaderData() as { stream_key: string, ingest_url: string};
   return (
-    <SidebarWithHeader>
+    <SidebarWithHeader hasAccess={1}>
       <div>
         <h1>Client Route</h1>
         <Suspense fallback={<div>Loading...</div>}>

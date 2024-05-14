@@ -1,10 +1,8 @@
-import { Link, Form, useActionData, useNavigation } from '@remix-run/react';
+import { Form, useActionData, useNavigation } from '@remix-run/react';
 import {
-  Box, CloseButton, Flex, Text, Icon, Stack, Link as ChakraLink, Drawer, Select, FormErrorMessage,
-  DrawerContent, useDisclosure, FormControl, FormLabel, Input, Button, Heading, useColorModeValue, useToast
+  Box, Flex, Stack, Select, FormErrorMessage,
+  FormControl, FormLabel, Input, Button, Heading, useColorModeValue, useToast
 } from "@chakra-ui/react";
-import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings, FiPlusCircle } from "react-icons/fi";
-import { IconType } from "react-icons";
 import React from 'react';
 import { getSession } from '../session.server'
 import SidebarWithHeader from '~/components/SidebarWithHeader';
@@ -152,7 +150,7 @@ export default function EventForm() {
   }, [actionData, toast]);
 
   return (
-    <SidebarWithHeader>
+    <SidebarWithHeader hasAccess={1}>
       <Flex
         minH={'100vh'}
         align={'center'}

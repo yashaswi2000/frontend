@@ -1,7 +1,7 @@
 import { useLoaderData } from '@remix-run/react';
 import { getSession } from '../session.server'
 import { useState } from 'react';
-import { Box, Text, Input, Select, Button, Flex, Stack, Heading, useColorModeValue, FormLabel, FormControl } from '@chakra-ui/react';
+import { Box, Text, Input, Select, Button, Stack, Heading, useColorModeValue, FormLabel, FormControl } from '@chakra-ui/react';
 import Chat from '~/chat/Chat';
 import SidebarWithHeader from '~/components/SidebarWithHeader';
 
@@ -121,7 +121,7 @@ export default function ViewStream() {
   };
 
   return (
-    <SidebarWithHeader>
+    <SidebarWithHeader hasAccess={1}>
       <div style={{ display: 'flex' }}>
       <Box>
         <Stack spacing={4} mx={'auto'} maxW={'lg'} py={6} px={6}>

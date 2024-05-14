@@ -1,6 +1,5 @@
-import { authenticator } from "~/auth.server"
-import { json, useLoaderData, Link, redirect } from '@remix-run/react';
-import { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
+import { redirect } from '@remix-run/react';
+import { LoaderFunctionArgs } from '@remix-run/node';
 import { destroySession, getSession } from "~/session.server";
 
 export async function loader({request}: LoaderFunctionArgs) {

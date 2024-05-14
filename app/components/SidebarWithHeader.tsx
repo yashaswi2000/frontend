@@ -1,4 +1,4 @@
-import { Link } from '@remix-run/react';
+import { Link, useLoaderData } from '@remix-run/react';
 import {
   Box, CloseButton, Flex, Text, Icon, Link as ChakraLink, Drawer,
   DrawerContent, useDisclosure, useColorModeValue,
@@ -6,6 +6,8 @@ import {
 import React from 'react';
 import { FiHome, FiStar, FiSettings, FiGitPullRequest, FiTarget } from "react-icons/fi";
 import { IconType } from "react-icons";
+import { json, redirect } from "@remix-run/node";
+import { getSession } from '~/session.server';
 
 // Define LinkItems with routes
 const LinkItems = [
@@ -14,9 +16,9 @@ const LinkItems = [
     { name: 'My Live Stream', icon: FiTarget, to: '/liveStreams' },
     { name: 'Logout', icon: FiSettings, to: '/logout' },
   ];
-  
+
   // Sidebar component
-  function SidebarContent({ onClose }: { onClose: () => void }) {
+  function SidebarContent({ onClose, filteredLinkItems }: { onClose: () => void, filteredLinkItems: typeof LinkItems }) {
     return (
       <Box
         transition="3s ease"
@@ -32,7 +34,7 @@ const LinkItems = [
           </Text>
           <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} color="white" />
         </Flex>
-        {LinkItems.map((link) => (
+        {filteredLinkItems.map((link) => (
           <NavItem key={link.name} icon={link.icon} link={link.to}>
             {link.name}
           </NavItem>
@@ -72,11 +74,22 @@ const LinkItems = [
   }
   
   // Parent component
-  export default function SidebarWithHeader({ children }: { children: React.ReactNode }) {
+  export default function SidebarWithHeader({ children, hasAccess }: { children: React.ReactNode, hasAccess: number }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
+
+    const filteredLinkItems = LinkItems.filter((link) => {
+      if (link.to === '/scheduledStreams' && hasAccess == 0) {
+        return false;
+      }
+      if (link.to === '/liveStreams' && hasAccess == 0) {
+        return false;
+      }
+      return true;
+    });
+
     return (
       <Box minH="100vh" bg="white">
-        <SidebarContent onClose={() => onClose()} />
+        <SidebarContent onClose={() => onClose()} filteredLinkItems={filteredLinkItems} />
         <Drawer
           autoFocus={false}
           isOpen={isOpen}
@@ -86,7 +99,7 @@ const LinkItems = [
           onOverlayClick={onClose}
           size="full">
           <DrawerContent>
-            <SidebarContent onClose={onClose} />
+            <SidebarContent onClose={onClose} filteredLinkItems={filteredLinkItems}/>
           </DrawerContent>
         </Drawer>
         <Box ml={{ base: 0, md: 60 }} p="4">

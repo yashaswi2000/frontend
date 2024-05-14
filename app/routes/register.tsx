@@ -1,6 +1,6 @@
-import { Form, useRouteLoaderData, json, useFetcher, redirect, useLoaderData } from '@remix-run/react';
+import { Form, json, redirect } from '@remix-run/react';
 import { Box, Button, FormControl, FormLabel, Input, VStack } from "@chakra-ui/react";
-import { AuthenticationDetails, CognitoUser, CognitoUserAttribute, CognitoUserPool } from 'amazon-cognito-identity-js';
+import { CognitoUserAttribute, CognitoUserPool } from 'amazon-cognito-identity-js';
 
 // Configure the user pool
 const userPool = new CognitoUserPool({

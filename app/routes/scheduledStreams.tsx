@@ -1,7 +1,7 @@
 import { useLoaderData, Link } from '@remix-run/react';
 import {
-  Box, CloseButton, Flex, Text, Icon, Link as ChakraLink, Drawer,
-  DrawerContent, useDisclosure, useColorModeValue,
+  Box,
+  Flex,
   Heading,
   Button
 } from "@chakra-ui/react";
@@ -44,7 +44,7 @@ export let loader = async ({ request }) => {
 export default function Dashboard() {
   const cards = useLoaderData() as { id: number, title: string, imageUrl: string, description: string , time: string}[];
   return (
-    <SidebarWithHeader>
+    <SidebarWithHeader hasAccess={1}>
     <Box p="4">
       <Heading mb="4">Scheduled Streams </Heading>
       <Flex overflowX="scroll" gap="3">

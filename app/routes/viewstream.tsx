@@ -1,4 +1,4 @@
-import { Link, Form, useActionData, useNavigation, json, useLoaderData } from '@remix-run/react';
+import { useNavigation, json, useLoaderData } from '@remix-run/react';
 import { getSession } from '../session.server'
 import SidebarWithHeader from '~/components/SidebarWithHeader';
 import { Suspense, lazy, useState } from "react";
@@ -40,7 +40,7 @@ export default function ViewStream() {
     const navigation = useNavigation();
 
   return (
-    <SidebarWithHeader>
+    <SidebarWithHeader hasAccess={1}>
       <Suspense fallback={<div>Loading...</div>}>
         {navigation.state === "idle" && <ClientComponent streamUrl={streamUrl} />}
       </Suspense>

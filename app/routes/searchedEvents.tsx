@@ -101,7 +101,7 @@ export default function SearchedEvents() {
   const { cards_live, cards_scheduled, cards_vod } = useLoaderData<LoaderData>();
 
   return (
-    <SidebarWithHeader>
+    <SidebarWithHeader hasAccess={1}>
       <Box p="4">
         <Flex justifyContent="space-between" alignItems="center" mb="4">
           <Heading color="purple.800">Live NOW</Heading>

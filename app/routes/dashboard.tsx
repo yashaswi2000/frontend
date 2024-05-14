@@ -21,6 +21,7 @@ type LoaderData = {
   cards_scheduled: Cards;
   cards_vod: Cards;
   accountEmail: string;
+  hasAccess: number;
 };
 
 export let loader = async ({request}) => {
@@ -30,10 +31,21 @@ export let loader = async ({request}) => {
   }
 
   const accountEmail = session.data.user.email
+
+  const hasChannelAccess = await fetch('https://1mqt3o8gkl.execute-api.us-east-1.amazonaws.com/dev/user/check-stream-access', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      account_email: accountEmail 
+  })
+  });
+  const hasAccess = await hasChannelAccess.json();
+
   let response = await fetch('https://1mqt3o8gkl.execute-api.us-east-1.amazonaws.com/dev/user/homepage/streams', {
       headers: {
       'Content-Type': 'application/json',
-      // Include additional headers here if needed
       },
   });
 
@@ -74,11 +86,12 @@ export let loader = async ({request}) => {
       };
     }),
     accountEmail,
+    hasAccess: hasAccess.access,
   };
 };
 
 export default function Dashboard() {
-  const { cards_live, cards_scheduled, accountEmail, cards_vod } = useLoaderData<LoaderData>();
+  const { cards_live, cards_scheduled, accountEmail, cards_vod, hasAccess } = useLoaderData<LoaderData>();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [reason, setChannel] = React.useState('');
@@ -102,7 +115,7 @@ export default function Dashboard() {
         // Handle successful response
         console.log('Channel request created successfully');
         onClose();
-        setReason('');
+        setChannel('');
       } else {
         // Handle error response
         console.error('Failed to create channel request');
@@ -127,9 +140,9 @@ export default function Dashboard() {
   };
 
   return (
-    <SidebarWithHeader>
+    <SidebarWithHeader hasAccess={hasAccess}>
       <Box p="4">
-        <Flex justifyContent="space-between" alignItems="center" mb="4" ml="1000" >
+        <Flex justifyContent="space-between" alignItems="center" mb="4" >
           <Input
             placeholder="Search for events"
             value={searchQuery}
