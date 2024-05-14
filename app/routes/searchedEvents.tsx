@@ -5,11 +5,27 @@ import Card from "~/components/Card";
 import { Box, Flex, Heading } from "@chakra-ui/react";
 import SidebarWithHeader from "~/components/SidebarWithHeader";
 
+type Cards = {
+  id: number;
+  title: string;
+  imageUrl: string;
+  description: string;
+  time: string;
+}[];
+
+type LoaderData = {
+  cards_live: Cards;
+  cards_scheduled: Cards;
+  cards_vod: Cards;
+  accountEmail: string;
+};
+
 export let loader = async ({ request }) => {
   const session = await getSession(request.headers.get("Cookie"));
   if (!session) {
     return redirect("/login");
   }
+  const accountEmail = session.data.user.email
 
   const url = new URL(request.url);
   const searchQuery = url.searchParams.get("q");
@@ -30,53 +46,85 @@ export let loader = async ({ request }) => {
     throw new Error("Couldn't fetch search results");
   }
 
-  const data = await response.json();
-  console.log(data);
-  const event_details = data.results;
+  let data = []
+  if(response.status != 204)
+    data = await response.json();
 
-  // Fetch event details for each event ID
-  //   const eventDetails = await Promise.all(
-  //     event_details.map(async (event_detail) => {
-  //       const eventResponse = await fetch(`https://your-api-endpoint.com/events/${event_detail.event_id}`);
-  //       const eventData = await eventResponse.json();
-  //       return eventData;
-  //     })
-  //   );
+  const event_ids = data.results.map(result => result.event_id);
 
-  const eventDetails = [
+  const eventDetails = await fetch(
+    "https://1mqt3o8gkl.execute-api.us-east-1.amazonaws.com/dev/user/get-search-event-details",
     {
-      id: 34,
-      title: "soccer intramural",
-      time: "2024-05-13 19:09:00",
-      imageUrl: 'https://www.usnews.com/dims4/USNEWS/72c90e6/17177859217/resize/800x540%3E/quality/85/?url=https%3A%2F%2Fmedia.beam.usnews.com%2F9d%2Fd819230374ef6531890bb7eee1dac0%2FNYU_WSP_Header.jpg',
-      description: "Soccer: NYU vs Columbia",
-      streamer: "am13801@nyu.edu",
-    },
-    {
-      id: 47,
-      title: "soccer mahasangraam",
-      time: "2024-05-12 12:00:00",
-      imageUrl: 'https://www.usnews.com/dims4/USNEWS/72c90e6/17177859217/resize/800x540%3E/quality/85/?url=https%3A%2F%2Fmedia.beam.usnews.com%2F9d%2Fd819230374ef6531890bb7eee1dac0%2FNYU_WSP_Header.jpg',
-      description: "footsal",
-      streamer: "am13801@nyu.edu",
-    },
-  ];
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ event_ids }),
+    }
+  );
 
-  return { eventDetails };
+  const event_details = await eventDetails.json();
+  console.log(event_details)
+  return {
+    cards_live: event_details.live.map((stream: { event_id: number, event_name: string, thumbnail: string, description: string, event_date: string, playback_url: string }) => {
+      return {
+        id: stream.event_id,
+        title: stream.event_name,
+        imageUrl: stream.thumbnail,
+        description: stream.description,
+        time: new Date(stream.event_date).toLocaleString(),
+        playback_url: stream.playback_url
+      };
+    }),
+    cards_scheduled: event_details.scheduled.map((stream: { event_id: number, event_name: string, thumbnail: string, description: string, event_date: string }) => {
+      return {
+        id: stream.event_id,
+        title: stream.event_name,
+        imageUrl: stream.thumbnail,
+        description: stream.description,
+        time: new Date(stream.event_date).toLocaleString()
+      };
+    }),
+    cards_vod: event_details.vod.map((stream: { event_id: number, event_name: string, thumbnail: string, description: string, event_date: string }) => {
+      return {
+        id: stream.event_id,
+        title: stream.event_name,
+        imageUrl: stream.thumbnail,
+        description: stream.description,
+        time: new Date(stream.event_date).toLocaleString()
+      };
+    })
+  };
 };
 
 export default function SearchedEvents() {
-  const { eventDetails } = useLoaderData();
+  const { cards_live, cards_scheduled, cards_vod } = useLoaderData<LoaderData>();
 
   return (
     <SidebarWithHeader>
       <Box p="4">
         <Flex justifyContent="space-between" alignItems="center" mb="4">
-          <Heading>Searched Events</Heading>
+          <Heading color="purple.800">Live NOW</Heading>
         </Flex>
         <Flex overflowX="scroll" gap="3">
-          {eventDetails.map((event) => (
-            <Card key={event.id} {...event} />
+          {cards_live.map(card => (
+            <Card key={card.id} {...card} />
+          ))}
+        </Flex>
+        <Flex justifyContent="space-between" alignItems="center" mb="4">
+          <Heading color="purple.800">Scheduled Events</Heading>
+        </Flex>
+        <Flex overflowX="scroll" gap="3">
+          {cards_scheduled.map(card => (
+            <Card key={card.id} {...card} />
+          ))}
+        </Flex>
+        <Flex justifyContent="space-between" alignItems="center" mb="4">
+          <Heading color="purple.800">Previous Events</Heading>
+        </Flex>
+        <Flex overflowX="scroll" gap="3">
+          {cards_vod.map(card => (
+            <Card key={card.id} {...card} />
           ))}
         </Flex>
       </Box>
