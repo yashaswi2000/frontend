@@ -34,7 +34,7 @@ export let loader = async ({ request }) => {
     return {
       id: stream.event_id,
       title: stream.event_title,
-      imageUrl: 'https://www.usnews.com/dims4/USNEWS/72c90e6/17177859217/resize/800x540%3E/quality/85/?url=https%3A%2F%2Fmedia.beam.usnews.com%2F9d%2Fd819230374ef6531890bb7eee1dac0%2FNYU_WSP_Header.jpg',
+      imageUrl: stream.imageUrl,
       description: stream.event_description,
       time: new Date(stream.event_time).toLocaleString(),
     };

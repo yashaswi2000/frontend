@@ -3,6 +3,7 @@ import { getSession } from '../session.server'
 import { useState } from 'react';
 import { Box, Text, Input, Select, Button, Flex, Stack, Heading, useColorModeValue, FormLabel, FormControl } from '@chakra-ui/react';
 import Chat from '~/chat/Chat';
+import SidebarWithHeader from '~/components/SidebarWithHeader';
 
 const sportsList = ['soccer', 'badminton'];
 
@@ -120,65 +121,67 @@ export default function ViewStream() {
   };
 
   return (
-    <div style={{ display: 'flex' }}>
-    <Box>
-      <Stack spacing={4} mx={'auto'} maxW={'lg'} py={6} px={6}>
-        <Stack align={'center'}>
-          <Heading fontSize={'2xl'}>Stream Details</Heading>
-        </Stack>
-        <Box rounded={'lg'} bg={useColorModeValue('white', 'gray.700')} boxShadow={'lg'} p={8}>
-          <Stack spacing={4}>
-            <Text fontWeight="bold" fontSize="lg">
-              Stream Key: {stream_details.stream_key}
-            </Text>
-            <Text fontWeight="bold" fontSize="lg">
-              Ingest URL: {stream_details.ingest_url}
-            </Text>
-          </Stack>
-        </Box>
-      </Stack>
-
-      {stream_details.is_sports == 1 && (
-        <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+    <SidebarWithHeader>
+      <div style={{ display: 'flex' }}>
+      <Box>
+        <Stack spacing={4} mx={'auto'} maxW={'lg'} py={6} px={6}>
           <Stack align={'center'}>
-            <Heading fontSize={'2xl'}>Score Update</Heading>
+            <Heading fontSize={'2xl'}>Stream Details</Heading>
           </Stack>
           <Box rounded={'lg'} bg={useColorModeValue('white', 'gray.700')} boxShadow={'lg'} p={8}>
             <Stack spacing={4}>
-              <form onSubmit={handleSubmit}>
-                <FormControl id="score">
-                  <FormLabel>Score:</FormLabel>
-                  <Input value={score} onChange={(e) => setScore(e.target.value)} />
-                </FormControl>
-
-                <FormControl id="event_type">
-                  <FormLabel>Event Type:</FormLabel>
-                  <Select value={eventType} onChange={(e) => setEventType(e.target.value)}>
-                    <option value="">Select an event type</option>
-                    {stream_details.eventTypes.map((type) => (
-                      <option key={type} value={type}>
-                        {type}
-                      </option>
-                    ))}
-                  </Select>
-                </FormControl>
-
-                <FormControl id="event_description">
-                  <FormLabel>Event Description:</FormLabel>
-                  <Input value={eventDescription} onChange={(e) => setEventDescription(e.target.value)} />
-                </FormControl>
-
-                <Button type="submit" colorScheme="blue">
-                  Submit
-                </Button>
-              </form>
+              <Text fontWeight="bold" fontSize="lg">
+                Stream Key: {stream_details.stream_key}
+              </Text>
+              <Text fontWeight="bold" fontSize="lg">
+                Ingest URL: {stream_details.ingest_url}
+              </Text>
             </Stack>
           </Box>
         </Stack>
-      )}
-    </Box>
 
-     <Chat />
-    </div>
+        {stream_details.is_sports == 1 && (
+          <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+            <Stack align={'center'}>
+              <Heading fontSize={'2xl'}>Score Update</Heading>
+            </Stack>
+            <Box rounded={'lg'} bg={useColorModeValue('white', 'gray.700')} boxShadow={'lg'} p={8}>
+              <Stack spacing={4}>
+                <form onSubmit={handleSubmit}>
+                  <FormControl id="score">
+                    <FormLabel>Score:</FormLabel>
+                    <Input value={score} onChange={(e) => setScore(e.target.value)} />
+                  </FormControl>
+
+                  <FormControl id="event_type">
+                    <FormLabel>Event Type:</FormLabel>
+                    <Select value={eventType} onChange={(e) => setEventType(e.target.value)}>
+                      <option value="">Select an event type</option>
+                      {stream_details.eventTypes.map((type) => (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
+                      ))}
+                    </Select>
+                  </FormControl>
+
+                  <FormControl id="event_description">
+                    <FormLabel>Event Description:</FormLabel>
+                    <Input value={eventDescription} onChange={(e) => setEventDescription(e.target.value)} />
+                  </FormControl>
+
+                  <Button type="submit" colorScheme="blue">
+                    Submit
+                  </Button>
+                </form>
+              </Stack>
+            </Box>
+          </Stack>
+        )}
+      </Box>
+
+      <Chat />
+      </div>
+    </SidebarWithHeader>
   );
 }

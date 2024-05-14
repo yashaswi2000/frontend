@@ -6,6 +6,12 @@ export default function Card({ id, title, imageUrl, description, time, playback_
   const toast = useToast();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isImageValid, setIsImageValid] = useState(true);
+  const defaultImageUrl = 'https://www.usnews.com/dims4/USNEWS/72c90e6/17177859217/resize/800x540%3E/quality/85/?url=https%3A%2F%2Fmedia.beam.usnews.com%2F9d%2Fd819230374ef6531890bb7eee1dac0%2FNYU_WSP_Header.jpg'
+
+  const handleImageError = () => {
+    setIsImageValid(false);
+  };
 
   const handleDeleteStreaming = async () => {
     try {
@@ -69,7 +75,11 @@ export default function Card({ id, title, imageUrl, description, time, playback_
 
   return (
     <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden" boxShadow="md" m="3">
-      <Image src={imageUrl} alt={title} />
+      <Image
+        src={isImageValid ? imageUrl : defaultImageUrl}
+        alt={title}
+        onError={handleImageError}
+      />
       <Box p="4">
         <Text fontWeight="bold" fontSize="lg">{title}</Text>
         <Text mt="2">{description}</Text>

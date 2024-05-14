@@ -12,8 +12,6 @@ const LinkItems = [
     { name: 'Home', icon: FiHome, to: '/dashboard' },
     { name: 'My Scheduled Streams', icon: FiGitPullRequest, to: '/scheduledStreams' },
     { name: 'My Live Stream', icon: FiTarget, to: '/liveStreams' },
-    { name: 'Favourites', icon: FiStar, to: '/favourites' },
-    { name: 'Settings', icon: FiSettings, to: '/settings' },
     { name: 'Logout', icon: FiSettings, to: '/logout' },
   ];
   
@@ -22,17 +20,17 @@ const LinkItems = [
     return (
       <Box
         transition="3s ease"
-        bg={useColorModeValue('white', 'gray.900')}
+        bg="purple.800"
         borderRight="1px"
-        borderRightColor={useColorModeValue('gray.200', 'gray.700')}
+        borderRightColor="purple.600"
         w={{ base: 'full', md: 60 }}
         pos="fixed"
         h="full">
         <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-          <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
+          <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold" color="white">
             NYU
           </Text>
-          <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
+          <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} color="white" />
         </Flex>
         {LinkItems.map((link) => (
           <NavItem key={link.name} icon={link.icon} link={link.to}>
@@ -55,9 +53,11 @@ const LinkItems = [
           role="group"
           cursor="pointer"
           _hover={{
-            bg: 'cyan.400',
+            bg: 'purple.600',
             color: 'white',
-          }}>
+          }}
+          color="white"
+        >
           {icon && (
             <Icon
               mr="4"
@@ -72,11 +72,11 @@ const LinkItems = [
   }
   
   // Parent component
-export default function SidebarWithHeader({ children }: { children: React.ReactNode }) {
+  export default function SidebarWithHeader({ children }: { children: React.ReactNode }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     return (
-      <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
-      <SidebarContent onClose={() => onClose()} />
+      <Box minH="100vh" bg="white">
+        <SidebarContent onClose={() => onClose()} />
         <Drawer
           autoFocus={false}
           isOpen={isOpen}

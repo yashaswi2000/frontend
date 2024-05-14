@@ -19,6 +19,7 @@ type Cards = {
 type LoaderData = {
   cards_live: Cards;
   cards_scheduled: Cards;
+  cards_vod: Cards;
   accountEmail: string;
 };
 
@@ -48,7 +49,7 @@ export let loader = async ({request}) => {
       return {
         id: stream.event_id,
         title: stream.event_title,
-        imageUrl: 'https://www.usnews.com/dims4/USNEWS/72c90e6/17177859217/resize/800x540%3E/quality/85/?url=https%3A%2F%2Fmedia.beam.usnews.com%2F9d%2Fd819230374ef6531890bb7eee1dac0%2FNYU_WSP_Header.jpg',
+        imageUrl: stream.imageUrl,
         description: stream.event_description,
         time: new Date(stream.event_time).toLocaleString(),
         playback_url: stream.playback_url
@@ -58,7 +59,16 @@ export let loader = async ({request}) => {
       return {
         id: stream.event_id,
         title: stream.event_title,
-        imageUrl: 'https://www.usnews.com/dims4/USNEWS/72c90e6/17177859217/resize/800x540%3E/quality/85/?url=https%3A%2F%2Fmedia.beam.usnews.com%2F9d%2Fd819230374ef6531890bb7eee1dac0%2FNYU_WSP_Header.jpg',
+        imageUrl: stream.imageUrl,
+        description: stream.event_description,
+        time: new Date(stream.event_time).toLocaleString()
+      };
+    }),
+    cards_vod: data.vod.map((stream: { event_id: number, event_title: string, imageUrl: string, event_description: string, event_time: string }) => {
+      return {
+        id: stream.event_id,
+        title: stream.event_title,
+        imageUrl: stream.imageUrl,
         description: stream.event_description,
         time: new Date(stream.event_time).toLocaleString()
       };
@@ -68,17 +78,13 @@ export let loader = async ({request}) => {
 };
 
 export default function Dashboard() {
-  const { cards_live, cards_scheduled, accountEmail } = useLoaderData<LoaderData>();
+  const { cards_live, cards_scheduled, accountEmail, cards_vod } = useLoaderData<LoaderData>();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [reason, setReason] = React.useState('');
+  const [reason, setChannel] = React.useState('');
   const submit = useSubmit();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
-
-  const handleReasonChange = (event) => {
-    setReason(event.target.value);
-  };
 
   const handleCreateChannelRequest = async (event) => {
     event.preventDefault();
@@ -112,20 +118,32 @@ export default function Dashboard() {
     }
   };
 
+  const handleChannelChange = (event) => {
+    const formattedChannel = event.target.value
+      .replace(/[^a-zA-Z0-9\s]/g, '') // Remove special characters
+      .replace(/\s+/g, ''); // Replace spaces with hyphens
+  
+    setChannel(formattedChannel);
+  };
+
   return (
     <SidebarWithHeader>
       <Box p="4">
-        <Flex justifyContent="space-between" alignItems="center" mb="4">
+        <Flex justifyContent="space-between" alignItems="center" mb="4" ml="1000" >
           <Input
             placeholder="Search for events"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={handleSearch}
+            bg="white"
+            color="purple.800"
+            borderColor="purple.600"
+            _placeholder={{ color: 'purple.400' }}
           />
         </Flex>
         <Flex justifyContent="space-between" alignItems="center" mb="4">
-          <Heading>Live NOW</Heading>
-          <Button colorScheme="blue" onClick={onOpen}>
+          <Heading color="purple.800">Live NOW</Heading>
+          <Button colorScheme="purple" onClick={onOpen}>
             Create Channel Request
           </Button>
         </Flex>
@@ -135,32 +153,40 @@ export default function Dashboard() {
           ))}
         </Flex>
         <Flex justifyContent="space-between" alignItems="center" mb="4">
-          <Heading>Scheduled Events</Heading>
+          <Heading color="purple.800">Scheduled Events</Heading>
         </Flex>
         <Flex overflowX="scroll" gap="3">
           {cards_scheduled.map(card => (
             <Card key={card.id} {...card} />
           ))}
         </Flex>
+        <Flex justifyContent="space-between" alignItems="center" mb="4">
+          <Heading color="purple.800">Previous Events</Heading>
+        </Flex>
+        <Flex overflowX="scroll" gap="3">
+          {cards_vod.map(card => (
+            <Card key={card.id} {...card} />
+          ))}
+        </Flex>
       </Box>
-
+  
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create Channel Request</ModalHeader>
-          <ModalCloseButton />
+          <ModalHeader bg="purple.800" color="white">Create Channel Request</ModalHeader>
+          <ModalCloseButton color="white" />
           <ModalBody>
             <form onSubmit={handleCreateChannelRequest}>
               <FormControl id="reason">
-                <FormLabel>Reason</FormLabel>
-                <Input type="text" value={reason} onChange={handleReasonChange} />
+                <FormLabel color="purple.800">Channel Name</FormLabel>
+                <Input type="text" value={reason} onChange={handleChannelChange} bg="white" color="purple.800" borderColor="purple.600" />
               </FormControl>
-
+  
               <ModalFooter>
-                <Button colorScheme="blue" mr={3} type="submit">
+                <Button colorScheme="purple" mr={3} type="submit">
                   Submit
                 </Button>
-                <Button variant="ghost" onClick={onClose}>
+                <Button variant="ghost" onClick={onClose} color="purple.800">
                   Cancel
                 </Button>
               </ModalFooter>

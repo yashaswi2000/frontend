@@ -8,9 +8,12 @@ import { IconType } from "react-icons";
 import React from 'react';
 import { getSession } from '../session.server'
 import SidebarWithHeader from '~/components/SidebarWithHeader';
-
+import AWS from 'aws-sdk';
 
 const sportsList = ['soccer', 'badminton'];
+
+const s3 = new AWS.S3();
+const bucketName = 'stream-thumbnail-nyu';
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -28,12 +31,26 @@ export async function action({ request }) {
     return { error: 'Thumbnail must be a PNG or JPEG file' };
   }
 
-  // Upload the thumbnail to S3
-  const s3Link = "boom boom dot com";
-  // const s3Link = "https://photos-bucket-3.s3.amazonaws.com/" + thumbnail.name;
-  // axios.put('url', thumbnail).then(response => {
-  //    alert("Image uploaded: " + thumbnail.name);
-  // });
+  let s3Link = ""
+  try {
+    // Convert Blob to Buffer
+    const thumbnailBuffer = await thumbnail.arrayBuffer().then(Buffer.from);
+
+    // Upload the thumbnail to S3
+    const uploadParams = {
+      Bucket: bucketName,
+      Key: `thumbnails/${thumbnail.name}`,
+      Body: thumbnailBuffer,
+      ContentType: thumbnail.type,
+    };
+
+    const uploadResult = await s3.upload(uploadParams).promise();
+    s3Link = uploadResult.Location;
+
+  } catch (error) {
+    console.error('Error uploading thumbnail to S3:', error);
+    return { error: 'Failed to upload thumbnail' };
+  }
 
   const session = await getSession(request.headers.get('Cookie'));
   const accountEmail = session.data.user.email

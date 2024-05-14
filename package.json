@@ -23,6 +23,8 @@
     "amazon-ivs-chat-messaging": "^1.1.1",
     "amazon-ivs-player": "^1.28.0",
     "amazon-ivs-web-broadcast": "^1.2.0",
+    "aws-sdk": "^2.1619.0",
+    "axios": "^1.6.8",
     "events": "^3.3.0",
     "framer-motion": "^6.5.1",
     "isbot": "^4.1.0",
