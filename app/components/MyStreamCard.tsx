@@ -105,6 +105,8 @@ export default function Card({ id, title, imageUrl, description, time }: { id: n
         src={isImageValid ? imageUrl : defaultImageUrl}
         alt={title}
         onError={handleImageError}
+        boxSize="300px"
+        objectFit="cover"
       />
       <Box p="4">
         <Text fontWeight="bold" fontSize="lg">{title}</Text>
@@ -115,7 +117,7 @@ export default function Card({ id, title, imageUrl, description, time }: { id: n
         <Button mt="3" colorScheme="teal" onClick={handleStartStreaming}>
           Start Event
         </Button>
-        <Button mt="3" ml="14" colorScheme="red" onClick={handleDeleteStreaming}>
+        <Button mt="3" ml="5" colorScheme="red" onClick={handleDeleteStreaming}>
           Delete Event
         </Button>
       </Box>

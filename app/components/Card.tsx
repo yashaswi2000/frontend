@@ -22,6 +22,8 @@ export default function Card({ id, title, imageUrl, description, time, playback_
         src={isImageValid ? imageUrl : defaultImageUrl}
         alt={title}
         onError={handleImageError}
+        boxSize="300px"
+        objectFit="cover"
       />
       <Box p="4">
         <Text fontWeight="bold" fontSize="lg">{title}</Text>
