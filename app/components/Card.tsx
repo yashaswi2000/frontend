@@ -2,12 +2,57 @@ import { Box, Image, Text, Button, useToast } from '@chakra-ui/react';
 import { Link, useNavigate } from '@remix-run/react';
 import { useState } from 'react';
 
-export default function Card({ id, title, imageUrl, description, time, playback_url }: { id: number, title: string, imageUrl: string, description: string , time: string, playback_url: string}) {
+export default function Card({ id, title, imageUrl, description, time, playback_url, streamer_email, user_email }: { id: number, title: string, imageUrl: string, description: string , time: string, playback_url: string, streamer_email: string, user_email: string}) {
+  const toast = useToast();
   const [isImageValid, setIsImageValid] = useState(true);
   const defaultImageUrl = 'https://www.usnews.com/dims4/USNEWS/72c90e6/17177859217/resize/800x540%3E/quality/85/?url=https%3A%2F%2Fmedia.beam.usnews.com%2F9d%2Fd819230374ef6531890bb7eee1dac0%2FNYU_WSP_Header.jpg'
 
   const handleImageError = () => {
     setIsImageValid(false);
+  };
+
+  const sendReminder = async () => {
+    try {
+      const response = await fetch(`https://1mqt3o8gkl.execute-api.us-east-1.amazonaws.com/dev/user/remind-me`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          event_id: id,
+          streamer_email: streamer_email,
+          event_name: title,
+          user_email,
+        })
+      });
+
+      if (response.ok) {
+        toast({
+          title: 'Success',
+          description: 'A reminder will be sent over email once the stream starts',
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: 'Error',
+          description: 'A reminder could not be scheduled',
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      console.error('Error scheduling reminder:', error);
+      toast({
+        title: 'Error',
+        description: 'An error occurred while sending a reminder',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
@@ -37,6 +82,9 @@ export default function Card({ id, title, imageUrl, description, time, playback_
         }}>
         <Button mt="3" colorScheme="teal">Learn More</Button>
         </Link>
+        <Button mt="3" ml="5" colorScheme="pink" onClick={sendReminder}>
+          Remind me!
+        </Button>
       </Box>
     </Box>
   );

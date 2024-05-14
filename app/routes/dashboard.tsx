@@ -14,6 +14,7 @@ type Cards = {
   imageUrl: string;
   description: string;
   time: string;
+  streamer_email: string;
 }[];
 
 type LoaderData = {
@@ -54,35 +55,37 @@ export let loader = async ({request}) => {
 
   // Parse the response body as JSON
   let data = await response.json();
-  console.log(data)
   // Simulate fetching card data
   return {
-    cards_live: data.live.map((stream: { event_id: number, event_title: string, imageUrl: string, event_description: string, event_time: string, playback_url: string }) => {
+    cards_live: data.live.map((stream: { event_id: number, event_streamer: string, event_title: string, imageUrl: string, event_description: string, event_time: string, playback_url: string }) => {
       return {
         id: stream.event_id,
         title: stream.event_title,
         imageUrl: stream.imageUrl,
         description: stream.event_description,
         time: new Date(stream.event_time).toLocaleString(),
-        playback_url: stream.playback_url
+        playback_url: stream.playback_url,
+        streamer_email: stream.event_streamer,
       };
     }),
-    cards_scheduled: data.scheduled.map((stream: { event_id: number, event_title: string, imageUrl: string, event_description: string, event_time: string }) => {
+    cards_scheduled: data.scheduled.map((stream: { event_id: number, event_streamer: string, event_title: string, imageUrl: string, event_description: string, event_time: string }) => {
       return {
         id: stream.event_id,
         title: stream.event_title,
         imageUrl: stream.imageUrl,
         description: stream.event_description,
-        time: new Date(stream.event_time).toLocaleString()
+        time: new Date(stream.event_time).toLocaleString(),
+        streamer_email: stream.event_streamer,
       };
     }),
-    cards_vod: data.vod.map((stream: { event_id: number, event_title: string, imageUrl: string, event_description: string, event_time: string }) => {
+    cards_vod: data.vod.map((stream: { event_id: number, event_streamer: string, event_title: string, imageUrl: string, event_description: string, event_time: string }) => {
       return {
         id: stream.event_id,
         title: stream.event_title,
         imageUrl: stream.imageUrl,
         description: stream.event_description,
-        time: new Date(stream.event_time).toLocaleString()
+        time: new Date(stream.event_time).toLocaleString(),
+        streamer_email: stream.event_streamer,
       };
     }),
     accountEmail,
@@ -133,8 +136,8 @@ export default function Dashboard() {
 
   const handleChannelChange = (event) => {
     const formattedChannel = event.target.value
-      .replace(/[^a-zA-Z0-9\s]/g, '') // Remove special characters
-      .replace(/\s+/g, ''); // Replace spaces with hyphens
+      .replace(/[^a-zA-Z0-9\s]/g, '')
+      .replace(/\s+/g, '');
   
     setChannel(formattedChannel);
   };
@@ -162,7 +165,7 @@ export default function Dashboard() {
         </Flex>
         <Flex overflowX="scroll" gap="3">
           {cards_live.map(card => (
-            <Card key={card.id} {...card} />
+            <Card key={card.id} {...card} user_email={accountEmail}/>
           ))}
         </Flex>
         <Flex justifyContent="space-between" alignItems="center" mb="4">
@@ -170,7 +173,7 @@ export default function Dashboard() {
         </Flex>
         <Flex overflowX="scroll" gap="3">
           {cards_scheduled.map(card => (
-            <Card key={card.id} {...card} />
+            <Card key={card.id} {...card} user_email={accountEmail}/>
           ))}
         </Flex>
         <Flex justifyContent="space-between" alignItems="center" mb="4">
@@ -178,7 +181,7 @@ export default function Dashboard() {
         </Flex>
         <Flex overflowX="scroll" gap="3">
           {cards_vod.map(card => (
-            <Card key={card.id} {...card} />
+            <Card key={card.id} {...card} user_email={accountEmail}/>
           ))}
         </Flex>
       </Box>

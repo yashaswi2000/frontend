@@ -11,6 +11,7 @@ type Cards = {
   imageUrl: string;
   description: string;
   time: string;
+  streamer_email: string;
 }[];
 
 type LoaderData = {
@@ -64,41 +65,44 @@ export let loader = async ({ request }) => {
   );
 
   const event_details = await eventDetails.json();
-  console.log(event_details)
   return {
-    cards_live: event_details.live.map((stream: { event_id: number, event_name: string, thumbnail: string, description: string, event_date: string, playback_url: string }) => {
+    cards_live: event_details.live.map((stream: { event_id: number, account_email: string, event_name: string, thumbnail: string, description: string, event_date: string, playback_url: string }) => {
       return {
         id: stream.event_id,
         title: stream.event_name,
         imageUrl: stream.thumbnail,
         description: stream.description,
         time: new Date(stream.event_date).toLocaleString(),
-        playback_url: stream.playback_url
+        playback_url: stream.playback_url,
+        streamer_email: stream.account_email,
       };
     }),
-    cards_scheduled: event_details.scheduled.map((stream: { event_id: number, event_name: string, thumbnail: string, description: string, event_date: string }) => {
+    cards_scheduled: event_details.scheduled.map((stream: { event_id: number, account_email: string, event_name: string, thumbnail: string, description: string, event_date: string }) => {
       return {
         id: stream.event_id,
         title: stream.event_name,
         imageUrl: stream.thumbnail,
         description: stream.description,
-        time: new Date(stream.event_date).toLocaleString()
+        time: new Date(stream.event_date).toLocaleString(),
+        streamer_email: stream.account_email,
       };
     }),
-    cards_vod: event_details.vod.map((stream: { event_id: number, event_name: string, thumbnail: string, description: string, event_date: string }) => {
+    cards_vod: event_details.vod.map((stream: { event_id: number, account_email: string, event_name: string, thumbnail: string, description: string, event_date: string }) => {
       return {
         id: stream.event_id,
         title: stream.event_name,
         imageUrl: stream.thumbnail,
         description: stream.description,
-        time: new Date(stream.event_date).toLocaleString()
+        time: new Date(stream.event_date).toLocaleString(),
+        streamer_email: stream.account_email,
       };
-    })
+    }),
+    accountEmail
   };
 };
 
 export default function SearchedEvents() {
-  const { cards_live, cards_scheduled, cards_vod } = useLoaderData<LoaderData>();
+  const { cards_live, cards_scheduled, cards_vod, accountEmail } = useLoaderData<LoaderData>();
 
   return (
     <SidebarWithHeader hasAccess={1}>
@@ -108,7 +112,7 @@ export default function SearchedEvents() {
         </Flex>
         <Flex overflowX="scroll" gap="3">
           {cards_live.map(card => (
-            <Card key={card.id} {...card} />
+            <Card key={card.id} {...card} user_email={accountEmail} />
           ))}
         </Flex>
         <Flex justifyContent="space-between" alignItems="center" mb="4">
@@ -116,7 +120,7 @@ export default function SearchedEvents() {
         </Flex>
         <Flex overflowX="scroll" gap="3">
           {cards_scheduled.map(card => (
-            <Card key={card.id} {...card} />
+            <Card key={card.id} {...card} user_email={accountEmail} />
           ))}
         </Flex>
         <Flex justifyContent="space-between" alignItems="center" mb="4">
@@ -124,7 +128,7 @@ export default function SearchedEvents() {
         </Flex>
         <Flex overflowX="scroll" gap="3">
           {cards_vod.map(card => (
-            <Card key={card.id} {...card} />
+            <Card key={card.id} {...card} user_email={accountEmail} />
           ))}
         </Flex>
       </Box>
