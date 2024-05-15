@@ -1,11 +1,7 @@
 import { Button } from '@chakra-ui/react';
-import { useEffect, useRef } from 'react';
-import { ClientActionFunctionArgs } from '@remix-run/react';
 import IVSBroadcastClient, {
-    Errors,
     BASIC_LANDSCAPE
  } from 'amazon-ivs-web-broadcast';
-
 
  async function handlePermissions() {
     let permissions = {
@@ -71,14 +67,19 @@ import IVSBroadcastClient, {
    });
 }
 
-export default function HomePage() {
-
+export default function HomePage({ stream_details }) {
     return (
       <div>
         <h1>IVS Broadcast</h1>
         <canvas  id="video-canvas"></canvas>
         <Button onClick={handlePermissions}>Request Permissions</Button>
         <Button onClick={startVideo}>Start Video</Button>
+        <div>
+          <h2>Stream Details</h2>
+          <p>Stream Key: {stream_details.stream_key}</p>
+          <p>Ingest URL: rtmps://{stream_details.ingest_url}:443/app/</p>
+        </div>
       </div>
+      
     );
 }

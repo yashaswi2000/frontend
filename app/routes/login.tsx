@@ -1,6 +1,13 @@
 import { Form, json, redirect, useActionData } from '@remix-run/react';
-import { ActionFunctionArgs } from '@remix-run/node';
+import { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { authenticator } from '~/auth.server';
+
+export async function loader({request}: LoaderFunctionArgs) {
+  // we check if the user is already logged in
+  return await authenticator.isAuthenticated(request, {
+    successRedirect: "/dashboard",
+  });
+};
 
 export async function action({ request }: ActionFunctionArgs) {
   // we call the method with the name of the strategy we want to use and the
